@@ -13,9 +13,10 @@ export default defineConfig({
 
   reporter: "html",
   timeout: 120_000,
+  workers: process.env.CI ? 1 : undefined,
 
   use: {
-    headless: false,
+    headless: !!process.env.CI,
     trace: "on-first-retry",
     screenshot: "only-on-failure",
     video: "retain-on-failure",
