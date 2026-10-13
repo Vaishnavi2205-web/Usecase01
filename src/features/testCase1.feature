@@ -62,7 +62,6 @@ Scenario: Verify Health Library links
   And Navigate back to Health Library
   When Click "Drugs, Devices & Supplements" and verify "/health/drugs" with title "Drugs, Devices & Supplements"
 
-  @run
   Scenario: Verify social media links in footer
     Given Launch Cleveland Clinic application
     When User scrolls to the footer
@@ -71,3 +70,69 @@ Scenario: Verify Health Library links
     And User verifies "YouTube" social media link with URL "https://www.youtube.com/user/clevelandclinic"
     And User verifies "Instagram" social media link with URL "https://www.instagram.com/clevelandclinic/"
     And User verifies "LinkedIn" social media link with URL "https://www.linkedin.com/company/cleveland-clinic"
+
+  Scenario: Verify all links under Actions section
+    Given Launch Cleveland Clinic application
+    When User scrolls to the footer
+    Then Actions section should be displayed
+    And user verifies all Actions footer links
+
+
+  Scenario: Verify Red Eye possible causes
+  Given Launch Cleveland Clinic application
+  Then Verify Health Library section
+
+  When Click "Body Systems & Organs" and verify "/health/body" with title "Body Systems & Organs"
+
+  When user searches for "Eyes" search results should display and click on "Eyes" 
+
+  Then user clicks "Red eye" and verifies page title "Red eye"
+
+  Then user clicks "Allergies" and verifies new page title "Allergies"
+  Then user clicks "Blepharitis" and verifies new page title "Blepharitis"
+  Then user clicks "Pink eye (conjunctivitis)" and verifies new page title "Pink Eye"
+  Then user clicks "Dry eye" and verifies new page title "Dry Eye"
+  Then user clicks "Eye injury" and verifies new page title "Eye Injury"
+  Then user clicks "Glaucoma" and verifies new page title "Glaucoma"
+
+Scenario: Verify Institutes Departments, Blood Management, Pharmacy and Need Help navigation
+  Given Launch Cleveland Clinic application
+  Then click on "Medical Professionals" in header
+  When user clicks on "Institutes & Departments"
+  Then user verifies page title "Institutes & Departments"
+  When user clicks on "Blood Management"
+  Then user verifies page title "Blood Management"
+  When user clicks on "Contact Us" and click "Back"
+  Then user captures screenshot "BloodManagementContact" 
+  When user clicks on "Pharmacy"
+  Then user verifies page title "Pharmacy" and click "Back"
+  When user clicks on "Take the Survey"   
+  Then click on "Need help?" in header
+  When user clicks on "Parking"
+  Then user verifies page title "Parking"
+  When user clicks on "Travel Assistance"
+  When user clicks on "Global Patient Services"
+  When user clicks on "Virtual Second Opinions"
+  Then user verifies page title "Get a Virtual Second Opinion"
+  When user clicks on "Get Started"
+  Then user captures screenshot "CreateAccount"
+
+@run
+Scenario: Verify Resources for Providers links
+  Given Launch Cleveland Clinic application
+  When user clicks on "Careers" dropdown
+  Then user verifies the redirected page title as "Careers"
+  And user returns to homepage
+  When user clicks on "Refer a Patient" dropdown
+  And user opens "Referring Physician Form" link
+  Then user verifies the redirected page title as "Medical Professionals Referring Physician Form"
+  And user returns to homepage
+  When user clicks on "Consult QD" dropdown
+  Then user verifies the redirected page title as "site for physicians and healthcare professionals"
+  And user returns to homepage
+  When user clicks on "Resources for Medical Professionals" dropdown
+  And user opens "Education" link
+  Then user verifies the redirected page title as "Education"
+  And user opens "Research" link
+  Then user verifies the redirected page title as "Medical Professionals Research"
+  And user returns to homepage

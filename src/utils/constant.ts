@@ -56,3 +56,66 @@ export enum FilterTabValue {
   specialties = "Specialties",
   language = "Language",
 }
+
+export const actionsLinks = [
+  {
+    linkName: "Appointments & Access",
+    expectedUrl: "https://my.clevelandclinic.org/patients/information/access",
+    newPage: false,
+  },
+  {
+    linkName: "Accepted Insurance",
+    expectedUrl: "https://my.clevelandclinic.org/patients/accepted-insurance",
+    newPage: false,
+  },
+  {
+    linkName: "Events Calendar",
+    expectedUrl: "https://events.clevelandclinic.org/",
+    newPage: false,
+  },
+  {
+    linkName: "Financial Assistance",
+    expectedUrl:
+      "https://my.clevelandclinic.org/patients/billing-finance/financial-assistance",
+    newPage: false,
+  },
+  {
+    linkName: "Give to Cleveland Clinic",
+    expectedUrl: "https://my.clevelandclinic.org/giving",
+    newPage: true,
+  },
+  {
+    linkName: "Pay Your Bill Online",
+    expectedUrl:
+      "https://my.clevelandclinic.org/patients/billing-finance/payment-options",
+    newPage: false,
+  },
+  {
+    linkName: "Price Transparency",
+    expectedUrl:
+      "https://my.clevelandclinic.org/patients/billing-finance/comprehensive-hospital-charges",
+    newPage: false,
+  },
+  {
+    linkName: "Refer a Patient",
+    expectedUrl: "https://my.clevelandclinic.org/professionals/referring",
+    newPage: false,
+  },
+  {
+    linkName: "Phone Directory",
+    expectedUrl: "https://my.clevelandclinic.org/about/contact/phone-directory",
+    newPage: false,
+  },
+  {
+    linkName: "Virtual Second Opinions",
+    expectedUrl:
+      "https://my.clevelandclinic.org/online-services/virtual-second-opinions",
+    newPage: false,
+  },
+  {
+    linkName: "Virtual Visits",
+    expectedUrl:
+      "https://my.clevelandclinic.org/online-services/virtual-visits",
+    newPage: false,
+  },
+];

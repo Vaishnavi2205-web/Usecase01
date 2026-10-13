@@ -4,6 +4,7 @@ import {
   TextValues,
   DataTestIdValues,
   FilterTabValue,
+  actionsLinks,
   baseURl,
 } from "../utils/constant";
 import { HomePageLocators } from "../utils/locator";
@@ -11,6 +12,7 @@ import { BasePage } from "./basePage";
 
 let doctorName = "";
 let doctorRating = "";
+let newPage: Page;
 export class HomePage extends BasePage {
   constructor(page: Page) {
     super(page);
@@ -103,9 +105,7 @@ export class HomePage extends BasePage {
     await this.takeScreenshot(this.page, doctorName);
   }
   public async clickNavigate(title: string): Promise<Page> {
-    const newPage = await this.handleNewPage(
-      HomePageLocators.titleClick(title),
-    );
+    newPage = await this.handleNewPage(HomePageLocators.titleClick(title));
     return newPage;
   }
 
@@ -142,12 +142,6 @@ export class HomePage extends BasePage {
     await this.verifyHealthLibrary();
   }
 
-  public async scrollToFooter(): Promise<void> {
-    const footer = this.page.locator("footer");
-    await footer.scrollIntoViewIfNeeded();
-    await expect(footer).toBeVisible();
-  }
-
   public async verifySocialMediaLink(
     mediaName: string,
     expectedUrl: string,
@@ -157,7 +151,7 @@ export class HomePage extends BasePage {
       .first();
     await socialMediaLink.scrollIntoViewIfNeeded();
     await expect(socialMediaLink).toBeVisible();
-    const newPage = await this.handleNewPage(
+    newPage = await this.handleNewPage(
       HomePageLocators.socialMediaLocator(mediaName),
     );
     console.log("New Page URL:", newPage.url());
@@ -169,5 +163,195 @@ export class HomePage extends BasePage {
 
   private escapeRegExp(value: string): string {
     return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  }
+
+  public async verifyActionsSectionDisplayed(): Promise<void> {
+    try {
+      const actionsSection = this.page.getByText("Actions", { exact: true });
+
+      await actionsSection.scrollIntoViewIfNeeded();
+      await expect(actionsSection).toBeVisible();
+
+      console.log("Actions section is displayed successfully");
+    } catch (error) {
+      console.error("Actions section is not displayed", error);
+      throw error;
+    }
+  }
+
+  public async verifyActionsFooterLinks(): Promise<void> {
+    try {
+      for (const link of actionsLinks) {
+        const element = this.page
+          .getByRole("link", { name: link.linkName, exact: true })
+          .last();
+        // Verify link is displayed
+        await expect(element).toBeVisible();
+        // Verify correct link text
+        await expect(element).toHaveText(link.linkName);
+        if (link.newPage) {
+          // Handle Events Calendar new window
+          const newPagePromise = this.page.context().waitForEvent("page");
+          await element.click();
+          newPage = await newPagePromise;
+          await newPage.waitForLoadState();
+          await expect(newPage).toHaveURL(link.expectedUrl);
+          await newPage.close();
+        } else {
+          // Normal link navigation
+          await element.click();
+          await this.page.waitForLoadState();
+          await expect(this.page).toHaveURL(link.expectedUrl);
+          // Navigate back to homepage
+          await this.page.goBack();
+          await this.page.waitForLoadState();
+          // Scroll back to footer for next link
+          await this.page.locator("footer").scrollIntoViewIfNeeded();
+        }
+      }
+      console.log("All Actions footer links verified successfully");
+    } catch (error) {
+      console.error("Actions footer link verification failed", error);
+      throw error;
+    }
+  }
+
+  public async clickFeaturedDepartment(linkName: string) {
+    try {
+      const element = this.page.getByRole("link", { name: linkName }).first();
+      await element.scrollIntoViewIfNeeded();
+      await element.click();
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  public async verifyTitle(expectedTitle: string, back?: string) {
+    try {
+      await expect(this.page).toHaveTitle(new RegExp(expectedTitle, "i"));
+      if (back) {
+        await this.page.goBack();
+      }
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  public async clickContactUs() {
+    try {
+      await this.page.getByRole("link", { name: "Contact Us" }).first().click();
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  public async captureScreenshot(name: string) {
+    try {
+      await this.page.screenshot({
+        path: `screenshots/${name}.png`,
+        fullPage: true,
+      });
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  public async clickTakeSurvey() {
+    try {
+      const element = this.page.getByRole("link", { name: "Take the Survey" });
+      await element.scrollIntoViewIfNeeded();
+      await element.click();
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  public async clickNeedHelp() {
+    try {
+      await this.page.getByText("Need Help?").click();
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  public async clickMedicalProfessional(linkName: string) {
+    await this.page.getByText(linkName).first().click();
+  }
+
+  public async clickLink(linkName: string, back?: string) {
+    try {
+      const element = this.page.getByRole("link", { name: linkName }).first();
+      await element.scrollIntoViewIfNeeded();
+      await element.click();
+      if (back) {
+        await this.page.goBack();
+      }
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  public async clickResourcesProviderDropdown(dropdown: string) {
+    const element = this.page
+      .locator(HomePageLocators.resourcesProviderDropdown(dropdown))
+      .first();
+
+    await element.scrollIntoViewIfNeeded();
+    await expect(element).toBeVisible();
+
+    const newPagePromise = this.page
+      .waitForEvent("popup", { timeout: 5000 })
+      .catch(() => null);
+
+    await element.click();
+
+    const newPage = await newPagePromise;
+
+    if (newPage) {
+      await newPage.waitForLoadState("domcontentloaded");
+      console.log("NewPage");
+      return newPage; // New tab
+    } else {
+      await this.page.waitForLoadState("domcontentloaded");
+      return this.page; // Same tab
+    }
+  }
+
+  public async openResourcesProviderLink(linkName: string): Promise<Page> {
+    const element = this.page
+      .locator(HomePageLocators.healthLibraryLink(linkName))
+      .first();
+
+    await element.scrollIntoViewIfNeeded();
+    await expect(element).toBeVisible();
+
+    const newPagePromise = this.page
+      .waitForEvent("popup", { timeout: 5000 })
+      .catch(() => null);
+
+    await element.click();
+
+    const newPage = await newPagePromise;
+
+    if (newPage) {
+      await newPage.waitForLoadState("domcontentloaded");
+      console.log("NewPage");
+      return newPage; // New tab
+    } else {
+      await this.page.waitForLoadState("domcontentloaded");
+      return this.page; // Same tab
+    }
+  }
+
+  public async verifyResourcesProviderTitle(
+    expectedTitle: string,
+    newPage: Page,
+  ) {
+    await this.verifyPageTitle(expectedTitle, newPage);
+  }
+
+  public async returnToHomePage() {
+    await this.page.goto(baseURl);
+    await this.page.waitForLoadState("domcontentloaded");
   }
 }

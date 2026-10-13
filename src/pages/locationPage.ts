@@ -1,11 +1,9 @@
 import { Page, expect } from "@playwright/test";
 
-import { TextValues, DataTestIdValues } from "../utils/constant";
+import { TextValues } from "../utils/constant";
 import { HomePageLocators } from "../utils/locator";
 import { BasePage } from "./basePage";
 
-let doctorName = "";
-let doctorRating = "";
 export class LocationPage extends BasePage {
   constructor(page: Page) {
     super(page);

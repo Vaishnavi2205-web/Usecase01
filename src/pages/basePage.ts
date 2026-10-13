@@ -54,11 +54,20 @@ export class BasePage {
     await expect(currentPage).toHaveTitle(new RegExp(expectedTitle, "i"));
   }
 
-  public async handleNewPage(locator: string): Promise<Page> {
-    const newPagePromise = this.page.context().waitForEvent("page");
-    await this.page.locator(locator).first().click();
+  public async handleNewPage(
+    locator: string,
+    currentPage: Page = this.page,
+  ): Promise<Page> {
+    const newPagePromise = currentPage.context().waitForEvent("page");
+    await currentPage.locator(locator).first().click();
     const newPage = await newPagePromise;
     await newPage.waitForLoadState("domcontentloaded");
     return newPage;
+  }
+
+  public async scrollToFooter(page?: Page): Promise<void> {
+    const footer = this.page.locator("footer");
+    await footer.scrollIntoViewIfNeeded();
+    await expect(footer).toBeVisible();
   }
 }

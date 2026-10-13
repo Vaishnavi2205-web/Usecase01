@@ -39,4 +39,10 @@ export const HomePageLocators = {
   footer: "footer",
   socialMediaLocator: (mediaName: string) => `[alt*="${mediaName}"]`,
   webAppointment: '[href="/webappointment"]',
+  results: '[class*="search-results"]',
+  resourcesProviderDropdown: (dropdown: string) =>
+    `//*[normalize-space(text())="${dropdown}"]`,
+
+  resourcesProviderLink: (linkName: string) =>
+    `//*[contains(normalize-space(.),"${linkName}")]/ancestor::a[1]`,
 };

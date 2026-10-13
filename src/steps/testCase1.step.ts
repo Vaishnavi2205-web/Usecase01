@@ -1,3 +1,4 @@
+import { Page } from "@playwright/test";
 import { createBdd } from "playwright-bdd";
 
 const { Given, When, Then } = createBdd();
@@ -12,15 +13,20 @@ import {
   PersonalDetailsHeader,
   Reason,
 } from "../utils/constant";
+import { OrganSearchPage } from "../pages/organSearchPage";
 
 let homePage: HomePage;
 let locationPage: LocationPage;
 let appointmentPage: AppointmentPage;
 let providerSearchPage: ProviderSearchPage;
+let organSearchPage: OrganSearchPage;
+let parentPage: Page;
 
 Given("Launch Cleveland Clinic application", async ({ page }) => {
   homePage = new HomePage(page);
   appointmentPage = new AppointmentPage(page);
+  organSearchPage = new OrganSearchPage(page);
+
   await homePage.launchURL();
 });
 
@@ -220,10 +226,94 @@ When("Navigate back to Health Library", async () => {
   await homePage.navigateBackToHealthLibrary();
 });
 
-When('User scrolls to the footer', async ({}) => {
+When("User scrolls to the footer", async ({}) => {
   await homePage.scrollToFooter();
 });
 
-Then('User verifies {string} social media link with URL {string}', async ({}, mediaName: string, expectedURL: string) => {
-  await homePage.verifySocialMediaLink(mediaName, expectedURL);
+Then(
+  "User verifies {string} social media link with URL {string}",
+  async ({}, mediaName: string, expectedURL: string) => {
+    await homePage.verifySocialMediaLink(mediaName, expectedURL);
+  },
+);
+
+Then("Actions section should be displayed", async () => {
+  await homePage.verifyActionsSectionDisplayed();
+});
+
+Then("user verifies all Actions footer links", async () => {
+  await homePage.verifyActionsFooterLinks();
+});
+
+Then(
+  "user clicks {string} and verifies new page title {string}",
+  async ({}, arg: string, arg1: string) => {
+    await organSearchPage.verifyCauseLink(arg, arg1);
+  },
+);
+
+When(
+  "user searches for {string} search results should display and click on {string}",
+  async ({}, arg: string, arg1: string) => {
+    await organSearchPage.searchHealthTopic(arg, arg1);
+  },
+);
+
+Then(
+  "user clicks {string} and verifies page title {string}",
+  async ({}, arg: string, arg1: string) => {
+    await organSearchPage.verifyRedEye(arg, arg1);
+  },
+);
+
+When("user clicks on {string}", async ({}, linkName: string) => {
+  await homePage.clickLink(linkName);
+});
+
+Then("user verifies page title {string}", async ({}, expectedTitle: string) => {
+  await homePage.verifyTitle(expectedTitle);
+});
+
+Then(
+  "user captures screenshot {string}",
+  async ({}, screenshotName: string) => {
+    await homePage.captureScreenshot(screenshotName);
+  },
+);
+
+Then("click on {string} in header", async ({}, arg: string) => {
+  await homePage.clickMedicalProfessional(arg);
+});
+
+When(
+  "user clicks on {string} and click {string}",
+  async ({}, arg: string, arg1: string) => {
+    await homePage.clickLink(arg, arg1);
+  },
+);
+
+Then(
+  "user verifies page title {string} and click {string}",
+  async ({}, arg: string, arg1: string) => {
+    await homePage.clickLink(arg, arg1);
+  },
+);
+
+When("user clicks on {string} dropdown", async ({}, dropdown: string) => {
+  parentPage = await homePage.clickResourcesProviderDropdown(dropdown);
+});
+
+When("user opens {string} link", async ({}, linkName: string) => {
+  await homePage.openResourcesProviderLink(linkName);
+});
+
+Then(
+  "user verifies the redirected page title as {string}",
+  async ({}, expectedTitle: string) => {
+    await homePage.verifyResourcesProviderTitle(expectedTitle, parentPage);
+  },
+);
+
+Then("user returns to homepage", async ({}) => {
+  await homePage.returnToHomePage();
 });
