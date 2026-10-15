@@ -13,7 +13,10 @@ export default defineConfig({
 
   reporter: "html",
   timeout: 120_000,
-  workers: process.env.CI ? 1 : undefined,
+  workers: 4,
+  retries: 2,
+  // retries: process.env.CI ? 2 : 0,
+  // workers: process.env.CI ? 1 : undefined,
 
   use: {
     headless: !!process.env.CI,

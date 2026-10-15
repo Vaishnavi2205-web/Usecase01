@@ -21,7 +21,7 @@ export class ProviderSearchPage extends BasePage {
     await expect(searchBox).toBeVisible();
     await searchBox.fill(keyword);
     await searchBox.press("Enter");
-
+    await expect(this.page.locator(HomePageLocators.spinner)).toBeHidden();
     await expect(
       this.page.getByRole("heading", { name: "Search results" }),
     ).toBeVisible();
@@ -51,6 +51,7 @@ export class ProviderSearchPage extends BasePage {
       .toLowerCase()
       .replace(/\s+/g, "-")}-provider-languages`;
     await this.page.getByTestId(testId).click();
+    await expect(this.page.getByLabel(language)).toBeVisible();
   }
 
   public async clickRequestProvider() {

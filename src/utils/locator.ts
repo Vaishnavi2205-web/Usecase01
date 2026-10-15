@@ -45,4 +45,6 @@ export const HomePageLocators = {
 
   resourcesProviderLink: (linkName: string) =>
     `//*[contains(normalize-space(.),"${linkName}")]/ancestor::a[1]`,
+  doctorRating: '[data-testid="ProviderRating"] [id^="rating-stars-"]',
+  spinner: ".spinner-container",
 };

@@ -50,6 +50,7 @@ export class HomePage extends BasePage {
   }
 
   public async verifyOurDoctorsPage(specialist: string) {
+    await expect(this.page.locator(HomePageLocators.spinner)).toBeHidden();
     await this.page.getByText(TextValues.ourDoctor).click();
     const matchingProvider = this.page
       .getByTestId(DataTestIdValues.providerCard)
@@ -58,10 +59,20 @@ export class HomePage extends BasePage {
   }
 
   public async verifySpecialistFilter(specialist: string) {
-    await this.page.waitForLoadState();
+    await expect(this.page.locator(HomePageLocators.spinner)).toBeHidden();
     await this.page
       .locator(HomePageLocators.filterTab(FilterTabValue.specialties))
       .click();
+    if (
+      await this.page
+        .getByTestId(DataTestIdValues.specialistShowMoreButton)
+        .isHidden()
+    ) {
+      await this.page.waitForLoadState();
+      await this.page
+        .locator(HomePageLocators.filterTab(FilterTabValue.specialties))
+        .click();
+    }
     await this.page
       .getByTestId(DataTestIdValues.specialistShowMoreButton)
       .click();
@@ -69,6 +80,7 @@ export class HomePage extends BasePage {
       .toLowerCase()
       .replace(/\s+/g, "-")}-provider-specialties-name`;
     await this.page.getByTestId(testId).click();
+    await expect(this.page.locator(HomePageLocators.spinner)).toBeHidden();
     await expect(
       this.page
         .getByRole("button", {
@@ -79,16 +91,27 @@ export class HomePage extends BasePage {
   }
 
   public async clickDoctorProfile() {
-    await this.page.waitForLoadState();
-    doctorName = await this.page
-      .locator(HomePageLocators.doctorsList)
-      .first()
-      .innerText();
-    doctorRating = await this.page
-      .locator(HomePageLocators.doctorsRating(doctorName))
-      .first()
-      .innerText();
-    await this.page.locator(HomePageLocators.doctorsList).first().click();
+    const providerCard = this.page
+      .getByTestId(DataTestIdValues.providerCard)
+      .first();
+
+    await expect(providerCard).toBeVisible({ timeout: 10000 });
+
+    const doctor = providerCard
+      .getByRole("heading", { level: 2 })
+      .getByRole("link");
+
+    doctorName = (await doctor.innerText()).trim();
+
+    const rating = providerCard.getByText(/\d\.\d\s*\(\d+\s*ratings?\)/);
+
+    const ratingText = (await rating.innerText()).trim();
+    doctorRating = ratingText.match(/\d\.\d/)?.[0] ?? "";
+
+    console.log("Doctor Name:", doctorName);
+    console.log("Doctor Rating:", doctorRating);
+
+    await doctor.click();
   }
 
   public async verifyDoctorProfile() {

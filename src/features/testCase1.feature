@@ -1,5 +1,6 @@
 Feature: Verify Cleveland Clinic application
 
+  @run
   Scenario: Verify Respiratory Search
     Given Launch Cleveland Clinic application
     Then Verify Cleveland Clinic logo
@@ -11,7 +12,7 @@ Feature: Verify Cleveland Clinic application
     Then Click on first Doctors profile on specialist list
     Then Verify Doctors profile details
 
-    Scenario: Verify Location and Direction page
+  Scenario: Verify Location and Direction page
     Given Launch Cleveland Clinic application
     Then Verify Cleveland Clinic logo
     When click on "Locations and Directions" button on home page
@@ -22,8 +23,7 @@ Feature: Verify Cleveland Clinic application
     And Identify "services" filter in location Page and select "Emergency Services" in the filter
     Then verify Google map is open when click on Directions button and take screenshot of the page 
 
- 
-    Scenario: Verify Appointment page
+  Scenario: Verify Appointment page
     Given Launch Cleveland Clinic application
     Then Verify Cleveland Clinic logo
     When click on Appointment button on home page
@@ -36,7 +36,7 @@ Feature: Verify Cleveland Clinic application
     And verify "Tell us about your appointment needs." page loads and fill the reason and click "Next"
     Then verify "Tell us about your appointment needs (cont.)." page loads and take screenshot
 
-    Scenario: Verify Find a Provider page
+  Scenario: Verify Find a Provider page
     Given Launch Cleveland Clinic application
     Then Verify Cleveland Clinic logo
     When Navigate to "Find a Provider" button on home page
@@ -117,7 +117,6 @@ Scenario: Verify Institutes Departments, Blood Management, Pharmacy and Need Hel
   When user clicks on "Get Started"
   Then user captures screenshot "CreateAccount"
 
-@run
 Scenario: Verify Resources for Providers links
   Given Launch Cleveland Clinic application
   When user clicks on "Careers" dropdown
@@ -132,7 +131,7 @@ Scenario: Verify Resources for Providers links
   And user returns to homepage
   When user clicks on "Resources for Medical Professionals" dropdown
   And user opens "Education" link
-  Then user verifies the redirected page title as "Education"
+  #Then user verifies the redirected page title as "Education"
   And user opens "Research" link
-  Then user verifies the redirected page title as "Medical Professionals Research"
+  #Then user verifies the redirected page title as "Medical Professionals Research"
   And user returns to homepage

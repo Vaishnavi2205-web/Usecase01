@@ -18,6 +18,7 @@ export enum TextValues {
 
 export enum DataTestIdValues {
   providerCard = "ProviderCard",
+  providerList = "ProviderList",
   specialistShowMoreButton = "provider-specialties-name-facet-show-hide",
   specialistCardiology = "facet-cardiology-provider-specialties-name",
   providerBookingRequest = "provider-booking-button",
