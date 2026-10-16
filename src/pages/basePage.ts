@@ -9,8 +9,8 @@ export class BasePage {
     this.page = page;
   }
 
-  public async launchURL() {
-    await this.page.goto(baseURl);
+  public async launchURL(url: string) {
+    await this.page.goto(url);
   }
 
   public async verifyURL(textData: string, endpoint: string) {

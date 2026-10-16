@@ -18,10 +18,17 @@ export class HomePage extends BasePage {
     super(page);
   }
 
+  /**
+   * verify Cleveland clinic logo in home page
+   */
   public async verifyLogo() {
     await expect(this.page.locator(HomePageLocators.logo)).toBeVisible();
   }
 
+  /**
+   * Search the keyword in search bar
+   * @param keyword the value to search
+   */
   public async verifySearchResults(keyword: string) {
     await expect(
       this.page.locator(HomePageLocators.searchResultList).first(),
@@ -30,6 +37,9 @@ export class HomePage extends BasePage {
     await this.verifyPageTitle(keyword);
   }
 
+  /**
+   * verify Respiratory Page tabs
+   */
   public async verifyRespiratoryPageTab() {
     await expect(
       this.page.locator(HomePageLocators.tabLink).first(),
@@ -49,6 +59,10 @@ export class HomePage extends BasePage {
     }
   }
 
+  /**
+   * verify the mentioned specialist are there in Doctors Page
+   * @param specialist i.e.,Heart specialist
+   */
   public async verifyOurDoctorsPage(specialist: string) {
     await expect(this.page.locator(HomePageLocators.spinner)).toBeHidden();
     await this.page.getByText(TextValues.ourDoctor).click();
@@ -58,6 +72,10 @@ export class HomePage extends BasePage {
     await expect(matchingProvider.first()).toBeVisible();
   }
 
+  /**
+   * verify particular specialist
+   * @param specialist i.e., cardiology
+   */
   public async verifySpecialistFilter(specialist: string) {
     await expect(this.page.locator(HomePageLocators.spinner)).toBeHidden();
     await this.page
@@ -90,6 +108,9 @@ export class HomePage extends BasePage {
     ).toBeVisible();
   }
 
+  /**
+   * click particular doctors profile and store the doctor's name and rating
+   */
   public async clickDoctorProfile() {
     const providerCard = this.page
       .getByTestId(DataTestIdValues.providerCard)
@@ -114,6 +135,9 @@ export class HomePage extends BasePage {
     await doctor.click();
   }
 
+  /**
+   * verify the doctors profile loaded correctly
+   */
   public async verifyDoctorProfile() {
     await expect(
       this.page.locator(HomePageLocators.providerName),
@@ -132,6 +156,9 @@ export class HomePage extends BasePage {
     return newPage;
   }
 
+  /**
+   * click appointment button in home Page
+   */
   public async clickAppointmentButton() {
     await this.page.locator(HomePageLocators.appointmentButton).click();
   }
@@ -161,7 +188,7 @@ export class HomePage extends BasePage {
   }
 
   public async navigateBackToHealthLibrary() {
-    await this.launchURL();
+    await this.launchURL(baseURl);
     await this.verifyHealthLibrary();
   }
 
@@ -318,18 +345,13 @@ export class HomePage extends BasePage {
     const element = this.page
       .locator(HomePageLocators.resourcesProviderDropdown(dropdown))
       .first();
-
     await element.scrollIntoViewIfNeeded();
     await expect(element).toBeVisible();
-
     const newPagePromise = this.page
       .waitForEvent("popup", { timeout: 5000 })
       .catch(() => null);
-
     await element.click();
-
     const newPage = await newPagePromise;
-
     if (newPage) {
       await newPage.waitForLoadState("domcontentloaded");
       console.log("NewPage");
@@ -344,18 +366,13 @@ export class HomePage extends BasePage {
     const element = this.page
       .locator(HomePageLocators.healthLibraryLink(linkName))
       .first();
-
     await element.scrollIntoViewIfNeeded();
     await expect(element).toBeVisible();
-
     const newPagePromise = this.page
       .waitForEvent("popup", { timeout: 5000 })
       .catch(() => null);
-
     await element.click();
-
     const newPage = await newPagePromise;
-
     if (newPage) {
       await newPage.waitForLoadState("domcontentloaded");
       console.log("NewPage");

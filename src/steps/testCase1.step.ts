@@ -8,6 +8,7 @@ import { AppointmentPage } from "../pages/appointmentPage";
 import { ProviderSearchPage } from "../pages/providerSearchPage";
 import { HomePageLocators } from "../utils/locator";
 import {
+  baseURl,
   ContactDetailsHeader,
   FileDetails,
   PersonalDetailsHeader,
@@ -27,7 +28,7 @@ Given("Launch Cleveland Clinic application", async ({ page }) => {
   appointmentPage = new AppointmentPage(page);
   organSearchPage = new OrganSearchPage(page);
 
-  await homePage.launchURL();
+  await homePage.launchURL(baseURl);
 });
 
 Then("Verify Cleveland Clinic logo", async ({}) => {

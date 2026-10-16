@@ -1,8 +1,11 @@
 Feature: Verify Cleveland Clinic application
 
-  @run
+Background: 
+  Given Launch Cleveland Clinic application
+
+@run
   Scenario: Verify Respiratory Search
-    Given Launch Cleveland Clinic application
+    #Given Launch Cleveland Clinic application
     Then Verify Cleveland Clinic logo
     When Search for "Respiratory"
     And Click on first search result on "Respiratory" 
@@ -81,13 +84,9 @@ Scenario: Verify Health Library links
   Scenario: Verify Red Eye possible causes
   Given Launch Cleveland Clinic application
   Then Verify Health Library section
-
   When Click "Body Systems & Organs" and verify "/health/body" with title "Body Systems & Organs"
-
   When user searches for "Eyes" search results should display and click on "Eyes" 
-
   Then user clicks "Red eye" and verifies page title "Red eye"
-
   Then user clicks "Allergies" and verifies new page title "Allergies"
   Then user clicks "Blepharitis" and verifies new page title "Blepharitis"
   Then user clicks "Pink eye (conjunctivitis)" and verifies new page title "Pink Eye"
